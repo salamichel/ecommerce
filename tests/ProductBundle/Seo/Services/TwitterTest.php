@@ -17,6 +17,8 @@ use PHPUnit\Framework\TestCase;
 use Sonata\Component\Currency\Currency;
 use Sonata\Component\Currency\CurrencyDetectorInterface;
 use Sonata\IntlBundle\Templating\Helper\NumberHelper;
+use Sonata\MediaBundle\Model\MediaInterface;
+use Sonata\MediaBundle\Provider\ImageProvider;
 use Sonata\MediaBundle\Provider\Pool;
 use Sonata\ProductBundle\Entity\BaseProduct;
 use Sonata\ProductBundle\Seo\Services\Twitter;
@@ -59,5 +61,53 @@ class TwitterTest extends TestCase
 
         $this->assertContains('twitter:label1', $content);
         $this->assertNotContains('twitter:image:src', $content);
+    }
+    public function testAlterPageImage(): void
+    {
+        $mediaPool = $this->createMock(Pool::class);
+        $seoPage = new SeoPage('test');
+        $extension = new SeoExtension($seoPage, 'UTF-8');
+        $numberHelper = $this->createMock(NumberHelper::class);
+        $currencyDetector = $this->createMock(CurrencyDetectorInterface::class);
+        $product = new ProductTwitterMock();
+
+        //Prepare currency
+        $currency = new Currency();
+        $currency->setLabel('EUR');
+        $currencyDetector->expects($this->any())
+                ->method('getCurrency')
+                ->willReturn($currency);
+
+        $imageDummyLink = 'http://localhost/public/upload/dummy.png';
+
+        // Test getImage
+        $image = $this->createMock(MediaInterface::class);
+
+        $imageProvider = $this->createMock(ImageProvider::class);
+        $imageProvider->expects($this->any())
+            ->method('generatePublicUrl')->willReturn($imageDummyLink);
+
+        $image->expects($this->any())
+            ->method('getName')->willReturn('correctMedia');
+        $image->expects($this->any())
+            ->method('getWidth')->willReturn('1111');
+        $image->expects($this->any())
+            ->method('getHeight')->willReturn('2222');        
+        $image->expects($this->any())
+            ->method('getProviderName')->willReturn($imageProvider);
+        $image->expects($this->any())
+            ->method('getContentType')->willReturn('image/png');
+
+        $mediaPool->expects($this->any())
+            ->method('getProvider')->willReturn($imageProvider);
+
+        $product->setImage($image);
+
+        $twitterService = new Twitter($mediaPool, $numberHelper, $currencyDetector, 'test', 'test', 'test', 'test', 'reference');
+        $twitterService->alterPage($seoPage, $product);
+        $content = $extension->getMetadatas();
+
+        $this->assertContains('twitter:label1', $content);
+        $this->assertContains($imageDummyLink, $content);
     }
 }

@@ -95,7 +95,7 @@ class Twitter implements ServiceInterface
             ->addMeta('name', 'twitter:domain', $this->domain);
 
         if ($image = $product->getImage()) {
-            $provider = $this->mediaPool->getProvider($image->getProviderName());
+            $provider = $this->mediaPool->getProvider($image->getProviderName());            
             $seoPage->addMeta('property', 'twitter:image:src', $provider->generatePublicUrl($image, $this->mediaFormat));
         }
     }
