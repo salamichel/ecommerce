@@ -87,17 +87,6 @@ class TwitterTest extends TestCase
         $imageProvider->expects($this->any())
             ->method('generatePublicUrl')->willReturn($imageDummyLink);
 
-        $image->expects($this->any())
-            ->method('getName')->willReturn('correctMedia');
-        $image->expects($this->any())
-            ->method('getWidth')->willReturn('1111');
-        $image->expects($this->any())
-            ->method('getHeight')->willReturn('2222');        
-        $image->expects($this->any())
-            ->method('getProviderName')->willReturn($imageProvider);
-        $image->expects($this->any())
-            ->method('getContentType')->willReturn('image/png');
-
         $mediaPool->expects($this->any())
             ->method('getProvider')->willReturn($imageProvider);
 
@@ -107,7 +96,6 @@ class TwitterTest extends TestCase
         $twitterService->alterPage($seoPage, $product);
         $content = $extension->getMetadatas();
 
-        $this->assertContains('twitter:label1', $content);
         $this->assertContains($imageDummyLink, $content);
     }
 }

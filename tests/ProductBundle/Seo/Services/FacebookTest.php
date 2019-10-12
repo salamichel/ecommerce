@@ -124,8 +124,6 @@ class FacebookTest extends TestCase
 
         $content = $extension->getMetadatas();
 
-        //description
-        $this->assertContains('O-some product', $content);
         // image link
         $this->assertContains($imageDummyLink, $content);
         //image width
