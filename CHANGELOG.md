@@ -2,6 +2,26 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.0.0](https://github.com/sonata-project/ecommerce/compare/2.3.0...3.0.0) - 2019-11-16
+### Fixed
+- Fixed missing security.context service error
+- Increase precision for decimal price fields in `BaseProduct`, `BaseOrder`,
+  `BaseOrderElement`
+
+### Removed
+- support for symfony 2
+- compatibility with FOSRest `<2.2`
+
+## [2.3.0](https://github.com/sonata-project/ecommerce/compare/2.2.0...2.3.0) - 2019-11-16
+### Fixed
+- Changed the authentication check in the CustomerSelector, check for
+`IS_AUTHENTICATED_REMEMBERED`.
+- removed usage of deprecated classes and interfaces
+- Missing relation for `productCollection` field
+
+### Removed
+- support for php 5 and php 7.0
+
 ## [2.2.0](https://github.com/sonata-project/ecommerce/compare/2.1.1...2.2.0) - 2017-12-25
 ### Added
 - Added missing `basket` property in `AddressType`
